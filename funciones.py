@@ -70,3 +70,26 @@ def inversaLU(L, U, P):
         Inv = np.column_stack((Inv, y))  # Agregamos la columna de la inversa
 
     return Inv
+
+def metodoPotencia(A, num_iteraciones):
+    tolerancia = 1e-6
+    autovalores = []
+    n = A.shape[0]
+    x0 = np.random.rand(n)
+    x0 = x0 / np.linalg.norm(x0)
+
+    for _ in range(num_iteraciones):
+        x1 = A @ x0
+        x1 = x1 / np.linalg.norm(x1)
+
+        autovalor = (x0.T @ A @ x0) / (x0.T @ x0) 
+        autovalores.append(autovalor)
+        if np.linalg.norm(x1 - x0) < tolerancia:
+            break
+        x0 = x1
+
+    promedio = np.mean(autovalores)
+    desviacion_estandar = np.std(autovalores)
+    maxaval = max(autovalores)
+
+    return promedio, desviacion_estandar, maxaval, autovalores
