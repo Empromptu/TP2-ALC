@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.linalg import solve_triangular
+import matplotlib.pyplot as plt
 
 def calcularLU(A):
     """
@@ -71,6 +72,7 @@ def inversaLU(L, U, P):
 
     return Inv
 
+
 def metodoPotencia(A, num_iteraciones):
     tolerancia = 1e-6
     autovalores = []
@@ -93,3 +95,59 @@ def metodoPotencia(A, num_iteraciones):
     maxaval = max(autovalores)
 
     return promedio, desviacion_estandar, maxaval, autovalores
+
+def metodoPotenciaRecursivo(C, k, epsilon=1e-6, autovalores=None, autovectores=None):
+    if autovalores is None:
+        autovalores = []
+    if autovectores is None:
+        autovectores = []
+    # Caso base
+    if len(autovalores) == k:
+        return autovalores, autovectores
+
+    # Generamos un vector aleatorio normalizado
+    n = C.shape[0]
+    x = np.random.rand(n)
+    x = x / np.linalg.norm(x)
+
+    # Iteramos
+    x_next = C @ x
+    x_next = x_next / np.linalg.norm(x_next)
+
+    while np.linalg.norm(x_next - x) >= (1 - epsilon):
+        x = x_next
+        x_next = C @ x
+        x_next = x_next / np.linalg.norm(x_next)
+
+    # Calculamos el autovalor usando el cociente de Rayleigh y lo guardamos con el autovector aproximado
+    autovalor = (x.T @ C @ x) / (x.T @ x)
+    autovalores.append(autovalor)
+    autovectores.append(x)  # Aquí se guarda el autovector correspondiente
+
+    # Construimos la nueva matriz C' = C - autovalor * x * x^T
+    Cprima = C - autovalor * np.outer(x, x)
+
+    return metodoPotenciaRecursivo(Cprima, k, epsilon, autovalores, autovectores)
+
+def GraficoProyeccion(proyeccion, nombre: str, color):
+    plt.figure(figsize=(8, 6))
+    plt.scatter(proyeccion[:, 0], proyeccion[:, 1], color=color, marker='o')
+    plt.title(f"Proyección de filas de {nombre} usando los autovectores principales")
+    for i in range(proyeccion.shape[0]):
+        plt.text(proyeccion[i, 0], proyeccion[i, 1], str(i), fontsize=9, ha='right')
+    plt.xlabel("Primera Componente Principal")
+    plt.ylabel("Segunda Componente Principal")
+    plt.grid()
+    plt.show()
+
+def GraficarFilas (Matriz, indice, titulo):
+    # Crear figura y ejes
+    fig, axs = plt.subplots(1, 1, figsize=(12, 5))
+    # Graficar la diferencia en barras
+    axs.bar(range(len(Matriz[indice])), Matriz[indice], color='orange')
+    axs.set_title(titulo)
+    axs.set_xlabel('Sectores')
+    axs.set_ylabel('Incidencia en Producción')
+
+    plt.tight_layout()
+    plt.show()
