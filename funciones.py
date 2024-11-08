@@ -74,6 +74,17 @@ def inversaLU(L, U, P):
 
 
 def metodoPotencia(A, num_iteraciones):
+    """
+    Calcula el autovalor dominante de una matriz A usando el Método de la Potencia.
+
+    Args:
+        A (ndarray): La Matriz a calcularle el autovalor 
+        num_iteraciones (int): Número máximo de iteraciones para aproximar el autovalor.
+
+    Returns:
+        tuple: Una tupla que contiene el promedio, la desviación estándar, el máximo de los autovalores 
+               y una lista de los autovalores calculados en cada iteración.
+    """
     tolerancia = 1e-6
     autovalores = []
     n = A.shape[0]
@@ -97,6 +108,20 @@ def metodoPotencia(A, num_iteraciones):
     return promedio, desviacion_estandar, maxaval, autovalores
 
 def metodoPotenciaRecursivo(C, k, epsilon=1e-6, autovalores=None, autovectores=None):
+    """
+    Calcula los primeros k autovalores y autovectores de una matriz de covarianza C 
+    usando el Método de la Potencia Recursivo, basado en la consigna 7.
+
+    Args:
+        C (ndarray): Matriz de Covarianza
+        k (int): Número de autovalores y autovectores a calcular.
+        epsilon (float, optional): Tolerancia para la convergencia. Default es 1e-6.
+        autovalores (list, optional): Lista para almacenar los autovalores encontrados. Vacia en el Caso Base
+        autovectores (list, optional): Lista para almacenar los autovectores encontrados. Vacia en el Caso Base
+
+    Returns:
+        tuple: Una tupla que contiene dos listas: autovalores y autovectores.
+    """
     if autovalores is None:
         autovalores = []
     if autovectores is None:
@@ -130,6 +155,14 @@ def metodoPotenciaRecursivo(C, k, epsilon=1e-6, autovalores=None, autovectores=N
     return metodoPotenciaRecursivo(Cprima, k, epsilon, autovalores, autovectores)
 
 def GraficoProyeccion(proyeccion, nombre: str, color):
+    """
+    Grafica la proyeccion de cada sector en los 2 autovectores principales
+
+    Args:
+        proyeccion: Filas de la Matriz proyectadas
+        nombre (str): Nombre de la Matriz para el titulo
+        color: Color de los puntos de la proyeccion
+    """
     plt.figure(figsize=(8, 6))
     plt.scatter(proyeccion[:, 0], proyeccion[:, 1], color=color, marker='o')
     plt.title(f"Proyección de filas de {nombre} usando los autovectores principales")
@@ -141,6 +174,14 @@ def GraficoProyeccion(proyeccion, nombre: str, color):
     plt.show()
 
 def GraficarFilas (Matriz, indice, titulo):
+    """
+    Grafico en barras de las filas de la Matriz
+
+    Args:
+        Matriz: Matriz a graficar
+        indice: Fila de la Matriz graficar
+        Titulo: Titulo del grafico
+    """
     # Crear figura y ejes
     fig, axs = plt.subplots(1, 1, figsize=(12, 5))
     # Graficar la diferencia en barras
