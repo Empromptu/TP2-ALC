@@ -183,7 +183,7 @@ def GraficarFilas (Matriz, indice, titulo):
         Titulo: Titulo del grafico
     """
     # Crear figura y ejes
-    fig, axs = plt.subplots(1, 1, figsize=(12, 5))
+    fig, axs = plt.subplots(1, 1, figsize=(6, 2.5))
     # Graficar la diferencia en barras
     axs.bar(range(len(Matriz[indice])), Matriz[indice], color='orange')
     axs.set_title(titulo)
