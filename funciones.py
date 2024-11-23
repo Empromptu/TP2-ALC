@@ -73,20 +73,18 @@ def inversaLU(L, U, P):
     return Inv
 
 
-def metodoPotencia(A, num_iteraciones):
+def metodoPotencia(A, num_iteraciones, tolerancia=1e-6):
     """
     Calcula el autovalor dominante de una matriz A usando el Método de la Potencia.
 
     Args:
-        A (ndarray): La Matriz a calcularle el autovalor 
-        num_iteraciones (int): Número máximo de iteraciones para aproximar el autovalor.
+        A (ndarray): Matriz cuadrada para calcular el autovalor dominante.
+        num_iteraciones (int): Número máximo de iteraciones permitidas.
+        tolerancia (float): Criterio de convergencia para el autovector.
 
     Returns:
-        tuple: Una tupla que contiene el promedio, la desviación estándar, el máximo de los autovalores 
-               y una lista de los autovalores calculados en cada iteración.
+        float: La estimación del autovalor dominante tras la convergencia.
     """
-    tolerancia = 1e-6
-    autovalores = []
     n = A.shape[0]
     x0 = np.random.rand(n)
     x0 = x0 / np.linalg.norm(x0)
@@ -94,18 +92,14 @@ def metodoPotencia(A, num_iteraciones):
     for _ in range(num_iteraciones):
         x1 = A @ x0
         x1 = x1 / np.linalg.norm(x1)
-
-        autovalor = (x0.T @ A @ x0) / (x0.T @ x0) 
-        autovalores.append(autovalor)
+        autovalor = (x0.T @ A @ x0) / (x0.T @ x0)  # Estimación del autovalor
         if np.linalg.norm(x1 - x0) < tolerancia:
-            break
+            return autovalor
         x0 = x1
 
-    promedio = np.mean(autovalores)
-    desviacion_estandar = np.std(autovalores)
-    maxaval = max(autovalores)
+    return autovalor  # Última estimación si no converge dentro del límite
 
-    return promedio, desviacion_estandar, maxaval, autovalores
+
 
 def metodoPotenciaRecursivo(C, k, epsilon=1e-6, autovalores=None, autovectores=None):
     """
